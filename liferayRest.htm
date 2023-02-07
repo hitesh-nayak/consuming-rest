@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+<body>
+    <form action="" enctype="multipart/form-data" id="FORM">
+        <div>
+            <label for="">File Name:</label>
+            <input type="text" id="FileName">
+            <label for="">File:</label>
+            <input type="file" id="File">
+            
+            <button type="submit" style="" id="submitB">Submit</button>
+        </div>
+    </form>
+</body>
+
+<script>
+    
+    const data = {
+            headline: "Test article by Hitesh Nayak",
+            articleBody: "Test blog-posting posted through Liferay DXP."
+}
+
+    // fetch('http://localhost:8080/o/headless-delivery/v1.0/sites/20121/blog-postings/', {headers :{Authorization :`Basic ${btoa('test@liferay.com:learn')}` }})
+    // .then((Response) => Response.json())
+    // .then(json => console.log(json))
+
+
+
+    // fetch('http://localhost:8080/o/headless-delivery/v1.0/sites/20121/blog-postings', 
+    // {method:"POST",
+    //  headers:{
+    //     "Content-Type": "application/json",
+    //     "Authorization": `Basic ${btoa('test@liferay.com:learn')}`
+    //  },
+    //  body: JSON.stringify(data)
+        
+    //  })
+    // .then((Response) => Response.json())
+    // .then(json => console.log(json))
+
+
+ 
+
+    fetch("http://localhost:8080/o/headless-delivery/v1.0/sites/20121/blog-postings/", {headers:{Authorization: `Basic ${btoa('test@liferay.com:learn')}` }})
+    .then(Response => Response.json())
+    .then(json => console.log(json)) 
+    
+    // fetch("http://localhost:8080/o/headless-delivery/v1.0/blog-postings/42321", { headers: {Authorization: `Basic ${btoa('test@liferay.com:learn')}` } })
+    // .then(Response => Response.json())
+    // .then(json => console.log(json)) 
+    
+    
+    
+    // fetch("http://localhost:8080/o/headless-delivery/v1.0/blog-postings/batch?callbackURL=http://localhost:8080/o/headless-delivery/v1.0/sites/20121/blog-postings/",{
+    //     method:"DELETE",
+    //     headers: {
+    //         "Content-Type": "application/json",
+    //         "Authorization": `Basic ${btoa('test@liferay.com:learn')}`
+    //     }
+
+    // } )
+    // .then(Response => Response.json());
+
+
+
+
+    // fetch("http://localhost:8080/o/headless-delivery/v1.0/blog-postings/42321", {
+    //         method: "DELETE",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             "Authorization": `Basic ${btoa('test@liferay.com:learn')}`
+    //         }
+
+    //     })
+    //     .then(Response => Response.json())
+    //     .then(json => console.log(json))
+
+    
+        const formData = new FormData();
+        const formDataTwo = new FormData();
+        const formDataThree = new FormData();
+
+        const fileOne = new Blob(["Hitesh","Nayak"],{type:'text/html'});
+        const fileTwo = new Blob(["Asif", "Khan"], { type: 'text/html' });
+        const fileThree = new Blob(["Gupta", "Yash"], { type: 'text/html' });
+
+
+        var reader = new FileReader();
+        reader.readAsArrayBuffer(fileOne);
+        var byteOne = [];
+        reader.onloadend = function(e){
+            if(e.target.readyState == FileReader.DONE){
+                var arrayBuffer = e.target.result;
+                array = new Uint8Array(arrayBuffer);
+
+            }
+            for(var i=0; i<array.length;i++){
+                byteOne.push(array[i]);
+            }
+        }
+
+        var readerOne = new FileReader();
+        readerOne.readAsArrayBuffer(fileTwo)
+        var byteTwo = [];
+            readerOne.onloadend = function (e) {
+                if (e.target.readyState == FileReader.DONE) {
+                    var arrayBuffer = e.target.result;
+                    array = new Uint8Array(arrayBuffer);
+
+                }
+                for (var i = 0; i < array.length; i++) {
+                    byteTwo.push(array[i]);
+                }
+            }
+
+        
+
+
+
+
+        var form = document.getElementById('FORM') 
+
+        form.onsubmit = async (e) =>{
+            e.preventDefault()
+            const form = e.currentTarget;
+
+            var readerTwo = new FileReader();
+            readerTwo.readAsArrayBuffer(document.getElementById('File').files[0]);
+            let byteThree = [];
+            const formDataNew = new FormData();
+
+            readerTwo.onloadend = function (e) {
+                if (e.target.readyState == FileReader.DONE) {
+                    var arrayBuffer = e.target.result;
+                    array = new Uint8Array(arrayBuffer);
+
+                }
+                for (var i = 0; i < array.length; i++) {
+                    byteThree.push(array[i]);
+                }
+                formDataNew.append('additionalProp1', byteThree)
+            }
+
+            const obj = {
+                additionalProp1: formData
+            }
+            
+            
+
+            fetch('http://localhost:8080/o/headless-delivery/v1.0/sites/20121/documents', {
+                method: "POST",
+                headers: {
+                    
+                    "Content-Type": "multipart/form-data",
+                    "Authorization": `Basic ${btoa('test@liferay.com:learn')}`
+                },
+                body: JSON.stringify(obj)
+            })
+                .then(Response => Response.json())
+                .then(json => console.log(json));
+
+        }
+        
+        
+
+        // formData.append('fileOne', byteOne);
+        // formDataTwo.append('fileTwo', byteTwo);
+        // formDataThree.append('fileThree', byteThree);
+        
+        
+
+
+        
+    
+
+    
+
+    
+    
+</script>
+</html>
